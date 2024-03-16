@@ -18,13 +18,12 @@ public class Process {
         this.id = UUID.randomUUID().toString();
         List<Integer> givenList = Arrays.asList(1, 2, 4, 5, 8, 10, 20, 50, 100);
         this.sizeInMemory = givenList.get(rand.nextInt(givenList.size()));
-        this.timeToExecute = 0;  // Initialize timeToExecute to a default value (you can change this as needed)
-        this.priority = Priority.MEDIA;  // Set a default priority
+        this.timeToExecute = 0;
+        this.priority = Priority.MEDIA;
     }
 
-    // Parameterized constructor
     public Process(int sizeInMemory) {
-        this();  // Call the default constructor to initialize other fields
+        this();
         this.sizeInMemory = sizeInMemory;
         this.priority = priority;
     }
