@@ -20,7 +20,7 @@ class WorstFitStrategy implements AllocationStrategy {
                 if (currentSize > maxSize) {
                     maxSize = currentSize;
                     startIndex = i;
-                    i += currentSize - 1; // Skip to the end of the free block
+                    i += currentSize - 1;
                 }
             }
         }
