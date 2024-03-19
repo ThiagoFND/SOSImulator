@@ -4,10 +4,18 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import so.exception.InvalidInputException;
+import so.memory.MemoryManager;
+import so.strategy.AllocationStrategy;
+import so.strategy.BestFitStrategy;
+import so.strategy.FirstFitStrategy;
+import so.strategy.WorstFitStrategy;
 
 public class Execute {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidInputException {
         Scanner scanner = new Scanner(System.in);
+        // Inicializa o MemoryManager com uma estratégia padrão
+        AllocationStrategy defaultStrategy = new FirstFitStrategy();
+        SystemOperation.setMm(new MemoryManager(defaultStrategy)); // Isso é feito apenas uma vez
         SystemOperation systemOperation = new SystemOperation();
         Process currentProcess = null;
 
@@ -23,16 +31,28 @@ public class Execute {
             }
 
             switch (escolha) {
-                case 1:
-                    try {
-                        System.out.println("Digite o tamanho na memória para o novo processo:");
-                        int sizeInMemory = readInt(scanner, "");
-                        currentProcess = new Process(sizeInMemory);
-                        System.out.println("Processo criado: " + currentProcess.getId());
-                    } catch (InvalidInputException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
+            case 1:
+                System.out.println("Deseja alterar a estratégia de alocação? (Sim/Não)");
+                scanner.nextLine(); // Consume the newline left by nextInt
+                String resposta = scanner.nextLine();
+                if ("Sim".equalsIgnoreCase(resposta)) {
+                    AllocationStrategy strategy = chooseAllocationStrategy(scanner);
+                    // Atualiza a estratégia no MemoryManager existente
+                    SystemOperation.getMm().setAllocationStrategy(strategy);
+                }
+
+                try {
+                    System.out.println("Digite o tamanho na memória para o novo processo:");
+                    int sizeInMemory = readInt(scanner, "");
+                    currentProcess = new Process(sizeInMemory);
+                    System.out.println("Processo criado: " + currentProcess.getId());
+                } catch (InvalidInputException e) {
+                    System.out.println(e.getMessage());
+                    // Aqui, dependendo do fluxo desejado, você pode permitir outra tentativa ou continuar o loop.
+                }
+                break;
+
+
 
                 case 2:
                     if (currentProcess != null) {
@@ -74,12 +94,34 @@ public class Execute {
         }
     }
 
+    private static AllocationStrategy chooseAllocationStrategy(Scanner scanner) {
+        System.out.println("Escolha a estratégia de alocação de memória: \n1. First Fit \n2. Best Fit \n3. Worst Fit");
+        while (true) {
+            try {
+                int strategyChoice = readInt(scanner, "Digite o número da estratégia: ");
+                switch (strategyChoice) {
+                    case 1:
+                        return new FirstFitStrategy();
+                    case 2:
+                        return new BestFitStrategy();
+                    case 3:
+                        return new WorstFitStrategy();
+                    default:
+                        System.out.println("Opção inválida. Tente novamente.");
+                        break;
+                }
+            } catch (InvalidInputException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
     private static int readInt(Scanner scanner, String message) throws InvalidInputException {
         try {
             if (!message.isEmpty()) System.out.println(message);
             return scanner.nextInt();
         } catch (InputMismatchException e) {
-            scanner.next();
+            scanner.next(); // Consume the invalid token
             throw new InvalidInputException("Entrada inválida. Por favor, digite um número inteiro.");
         }
     }

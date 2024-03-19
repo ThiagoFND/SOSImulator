@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import so.Process;
 
-class WorstFitStrategy implements AllocationStrategy {
+public class WorstFitStrategy implements AllocationStrategy {
     @Override
     public Optional<Integer> findFitIndex(String[] memory, Process p) {
         var maxSize = 0;

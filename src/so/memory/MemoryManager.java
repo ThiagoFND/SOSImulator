@@ -12,6 +12,10 @@ public class MemoryManager {
         this.physicMemory = new String[128];
     }
 
+    public void setAllocationStrategy(AllocationStrategy allocationStrategy) {
+        this.allocationStrategy = allocationStrategy;
+    }
+    
     public void write(Process p) {
         allocationStrategy.findFitIndex(physicMemory, p).ifPresentOrElse(startIndex -> {
             for (int i = startIndex; i < startIndex + p.getSizeInMemory(); i++) {
