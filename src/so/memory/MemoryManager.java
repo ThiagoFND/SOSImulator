@@ -4,12 +4,12 @@ import so.Process;
 import so.strategy.AllocationStrategy;
 
 public class MemoryManager {
-    private String[] physicMemory;
+    private Long[] physicMemory;
     private AllocationStrategy allocationStrategy;
 
     public MemoryManager(AllocationStrategy allocationStrategy) {
         this.allocationStrategy = allocationStrategy;
-        this.physicMemory = new String[128];
+        this.physicMemory = new Long[128];
     }
 
     public void setAllocationStrategy(AllocationStrategy allocationStrategy) {
@@ -25,12 +25,11 @@ public class MemoryManager {
         }, () -> System.out.println("Espaço insuficiente na memória para o processo: " + p.getId()));
     }
 
-
     public void deleteProcess(Process p, int blocksToDelete) {
         var deletedBlocks = 0;
 
         for (var i = 0; i < physicMemory.length && deletedBlocks < blocksToDelete; i++) {
-            if (p.getId().equals(physicMemory[i])) {
+            if (physicMemory[i] != null && physicMemory[i] == p.getId()) {
                 physicMemory[i] = null;
                 deletedBlocks++;
             }
@@ -45,7 +44,7 @@ public class MemoryManager {
 
     public void printStatusMemory() {
         for (var s : physicMemory) {
-            System.out.print((s != null ? s : "null") + " | ");
+            System.out.print((s != null ? s.toString() : "null") + " | ");
         }
         System.out.println();
     }

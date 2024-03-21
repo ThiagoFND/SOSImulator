@@ -6,7 +6,7 @@ import so.Process;
 
 public class WorstFitStrategy implements AllocationStrategy {
     @Override
-    public Optional<Integer> findFitIndex(String[] memory, Process p) {
+    public Optional<Integer> findFitIndex(Long[] memory, Process p) {
         var maxSize = 0;
         var startIndex = -1;
         var currentSize = 0;
@@ -17,11 +17,11 @@ public class WorstFitStrategy implements AllocationStrategy {
                 while (i + currentSize < memory.length && memory[i + currentSize] == null) {
                     currentSize++;
                 }
-                if (currentSize > maxSize) {
+                if (currentSize > maxSize && currentSize >= p.getSizeInMemory()) {
                     maxSize = currentSize;
                     startIndex = i;
-                    i += currentSize - 1;
                 }
+                i += currentSize - 1;
             }
         }
 

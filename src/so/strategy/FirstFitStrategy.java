@@ -7,7 +7,7 @@ import java.util.Optional;
 public class FirstFitStrategy implements AllocationStrategy {
 
 	@Override
-	public Optional<Integer> findFitIndex(String[] memory, Process process) {
+	public Optional<Integer> findFitIndex(Long[] memory, Process process) {
 		int sizeNeeded = process.getSizeInMemory();
 		int freeSpace = 0;
 

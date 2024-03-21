@@ -13,9 +13,8 @@ import so.strategy.WorstFitStrategy;
 public class Execute {
     public static void main(String[] args) throws InvalidInputException {
         Scanner scanner = new Scanner(System.in);
-        // Inicializa o MemoryManager com uma estratégia padrão
         AllocationStrategy defaultStrategy = new FirstFitStrategy();
-        SystemOperation.setMm(new MemoryManager(defaultStrategy)); // Isso é feito apenas uma vez
+        SystemOperation.setMm(new MemoryManager(defaultStrategy));
         SystemOperation systemOperation = new SystemOperation();
         Process currentProcess = null;
 
@@ -33,11 +32,10 @@ public class Execute {
             switch (escolha) {
             case 1:
                 System.out.println("Deseja alterar a estratégia de alocação? (Sim/Não)");
-                scanner.nextLine(); // Consume the newline left by nextInt
+                scanner.nextLine();
                 String resposta = scanner.nextLine();
                 if ("Sim".equalsIgnoreCase(resposta)) {
                     AllocationStrategy strategy = chooseAllocationStrategy(scanner);
-                    // Atualiza a estratégia no MemoryManager existente
                     SystemOperation.getMm().setAllocationStrategy(strategy);
                 }
 
@@ -48,7 +46,6 @@ public class Execute {
                     System.out.println("Processo criado: " + currentProcess.getId());
                 } catch (InvalidInputException e) {
                     System.out.println(e.getMessage());
-                    // Aqui, dependendo do fluxo desejado, você pode permitir outra tentativa ou continuar o loop.
                 }
                 break;
 
@@ -69,8 +66,9 @@ public class Execute {
 
                 case 4:
                     System.out.println("Digite o ID do processo para deletar na memória:");
+                    long idToDelete = scanner.nextLong();
                     scanner.nextLine();
-                    String idToDelete = scanner.nextLine();
+
                     Process processToDelete = new Process();
                     processToDelete.setId(idToDelete);
 
@@ -82,6 +80,7 @@ public class Execute {
                         System.out.println(e.getMessage());
                     }
                     break;
+
 
                 case 0:
                     System.out.println("Saindo do programa.");
@@ -121,7 +120,7 @@ public class Execute {
             if (!message.isEmpty()) System.out.println(message);
             return scanner.nextInt();
         } catch (InputMismatchException e) {
-            scanner.next(); // Consume the invalid token
+            scanner.next();
             throw new InvalidInputException("Entrada inválida. Por favor, digite um número inteiro.");
         }
     }
